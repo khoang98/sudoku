@@ -82,7 +82,7 @@ sudoku0(SGrid, ResultSGrid):-
     sudoku0(G1, ResultSGrid)
     ; ResultSGrid = SGrid
     ),
-    open('output.txt',write,Out),
+    open('grid.txt',write,Out),
     write(Out, ResultSGrid),
     close(Out).
 
@@ -104,7 +104,11 @@ rpz([Head|Tail],X,Result):-
     append([Head],R1,Result)
     ).
 ssolve(SGrid,Grid):-
-    open('output.txt',write,Out),
-    time(once(sudoku0(SGrid,Grid))),
-    write(Out, Grid),
+    open('time.txt',write,Out),
+    get_time(TimeOne),
+    once(sudoku0(SGrid,Grid)),
+    get_time(TimeTwo),
+    B is TimeTwo-TimeOne,
+    write(Out, B),
     close(Out).
+
