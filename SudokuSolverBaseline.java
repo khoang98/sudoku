@@ -1,14 +1,12 @@
-import java.util.Arrays;
-
 public class SudokuSolverBaseline {
 
-    private Sudoku solveMe;
+    public Sudoku solveMe;
 
     public SudokuSolverBaseline(Sudoku s){
         this.solveMe = s;
     }
 
-    void solvePuzzle(){
+    public boolean solvePuzzle(){
 
         int puzzleSize = this.solveMe.puzzle.length;
         for(int i = 0; i < puzzleSize; i++){
@@ -16,27 +14,20 @@ public class SudokuSolverBaseline {
 
                 if(this.solveMe.puzzle[i][j] == 0){
                     for(int option = 1; option <= puzzleSize; option++){
-
-
                         if(this.solveMe.isValid(option, i, j)){
                             this.solveMe.puzzle[i][j] = option;
-                            solvePuzzle();
-                        }
-
-                        // at this point it could not be valid so backtrack
-                        this.solveMe.puzzle[i][j] = 0;
+                            if(solvePuzzle()){
+                                return true;
+                            }
+                            else this.solveMe.puzzle[i][j] = 0;
+                        }  
                     }
-
-                    // this is to prevent stackOverflow
-                    return;
+                    // at this point it could not be valid so backtrack
+                    return false;
                 }
             }
         }
-
-        // store the solution so we can access later
-        System.out.println("Solved Puzzle:");
-        System.out.println(Arrays.deepToString(this.solveMe.puzzle) + "\n");
-        return;
+        return true;
     }
 
 }
