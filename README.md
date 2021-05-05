@@ -19,7 +19,7 @@ PROLOG IS A LOGIC PROGRAMING LANGUAGE. TO ADD PROLOG-SWI, the bog standard versi
 
 Then, to use swipl at the command line, add /Applications/SWI-Prolog.app/Contents/MacOS/ to your $PATH variable.
 
-for those who forgot: sudo nano /etc/paths is a fast way to do this on newer macs, just use ctrl+x to save and exit the file once you are done. ALSO MAKE SURE TO RESTART YOUR TERMINAL TO MAKE THESE CHANGES TO YOUR PATH TAKE HOLD!!!!
+for those who forgot: sudo nano /etc/paths is a fast way to do this on newer macs, just use ctrl+x to save and exit the file once you are done. confirm this works by running "echo $PATH" and looking for the path/ ALSO MAKE SURE TO RESTART YOUR TERMINAL TO MAKE THESE CHANGES TO YOUR PATH TAKE HOLD!!!!
 
 Brew alternatives also exist, but scare me.
 
