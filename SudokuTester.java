@@ -25,17 +25,17 @@ public class SudokuTester {
         System.out.println("Puzzle to solve:");
         System.out.println(Arrays.deepToString(solveMe.puzzle) + "\n");
 
-        long startBase = System.nanoTime();
+        long startBase = System.currentTimeMillis();
 
         boolean returned = baseline.solvePuzzle();
 
-        long endBase = System.nanoTime();
+        long endBase = System.currentTimeMillis();
 
         if(!returned){
             System.out.println("No Valid Solution Exists");
         }
 
-        System.out.println("Baseline Solver finished in " + (endBase - startBase)/1000 + " ms.");
+        System.out.println("Baseline Solver finished in " + (endBase - startBase) + " ms.");
         System.out.print("Result:");
         System.out.println(Arrays.deepToString(baseline.solveMe.puzzle) + "\n");
 
