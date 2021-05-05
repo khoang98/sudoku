@@ -1,6 +1,9 @@
 import java.util.Arrays;
 
 public class SudokuTester {
+    public static final boolean PROLOG = false;
+
+
     public static void main(String[] args) {
         int[][] puzzle = {
                 {0,7,0,0,0,0,0,0,9},
@@ -21,10 +24,24 @@ public class SudokuTester {
 
         long startBase = System.nanoTime();
 
-        baseline.solvePuzzle();
+        boolean returned = baseline.solvePuzzle();
 
         long endBase = System.nanoTime();
 
+        if(!returned){
+            System.out.println("No Valid Solution Exists");
+        }
+
         System.out.println("Baseline Solver finished in " + (endBase - startBase)/1000 + " ms.");
+        System.out.print("Result:");
+        System.out.println(Arrays.deepToString(baseline.solveMe.puzzle) + "\n");
+
+        if (PROLOG){
+          try {
+            PrologCommand.runProlog(puzzle);
+          } catch (Exception e) {
+              System.out.println("ERROR IN PROLOG CODE");
+          }
+        }
     }
 }
