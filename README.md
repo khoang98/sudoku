@@ -22,6 +22,7 @@ Then, to use swipl at the command line, add /Applications/SWI-Prolog.app/Content
 for those who forgot: sudo nano /etc/paths is a fast way to do this on newer macs, just use ctrl+x to save and exit the file once you are done. ALSO MAKE SURE TO RESTART YOUR TERMINAL TO MAKE THESE CHANGES TO YOUR PATH TAKE HOLD!!!!
 
 Brew alternatives also exist, but scare me.
+
 TO UTALIZE PROLOG, set PROLOG = true in tester.
 
 ## Future Functionality:
