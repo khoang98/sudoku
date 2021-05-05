@@ -27,6 +27,7 @@ TO UTALIZE PROLOG, set PROLOG = true in tester.
 
 ## Future Functionality:
 
-We will add at least one parallel implementation which is essentialy a parallel implementation of tree search, but within that taks we can vary parameters of that tree search, which must use fork-join constructions to delegate tasks.
+There are several scales at which we could parallelize the process. To check if a grid is “consistent” (contains 1-9 and nothing else) given its row, column, or boxes is an embarrassingly parallel task. 
+The approach we will take, however, is how to search the state space of possible next “placements” of a number in an iterative fashion. Think about solving a 3x3 sudoku. From a partially filled grid, we can evaluate all the possible “next” grids from that grid. We can give each of these next grids to a particular thread to evaluate, and even iterate further down the “tree” in a breadth-first search approach. 
 
 The program will also return a table about the relative times of each of the different solving approaches (baseline, parallel in different forms, constraint-method)
