@@ -1,7 +1,7 @@
 import java.util.Arrays;
 
 public class SudokuTester {
-    public static final boolean PROLOG = false;
+    public static final boolean PROLOG = true;
 
 
     public static void main(String[] args) {
@@ -17,7 +17,10 @@ public class SudokuTester {
                 {7,0,0,2,0,3,0,9,6}
         };
 
-        Sudoku solveMe = new Sudoku(puzzle);
+        int[][] nv = new int[puzzle.length][puzzle[0].length];
+        for (int i = 0; i < nv.length; i++) nv[i] = Arrays.copyOf(puzzle[i], puzzle[i].length);
+
+        Sudoku solveMe = new Sudoku(nv);
         SudokuSolverBaseline baseline = new SudokuSolverBaseline(solveMe);
         System.out.println("Puzzle to solve:");
         System.out.println(Arrays.deepToString(solveMe.puzzle) + "\n");
@@ -36,12 +39,16 @@ public class SudokuTester {
         System.out.print("Result:");
         System.out.println(Arrays.deepToString(baseline.solveMe.puzzle) + "\n");
 
+
         if (PROLOG){
           try {
-            PrologCommand.runProlog(puzzle);
+            long ptime = PrologCommand.runProlog(puzzle);
+            System.out.println("Prolog Solver finished in " + ptime + " ms.");
+
           } catch (Exception e) {
               System.out.println("ERROR IN PROLOG CODE");
           }
         }
+
     }
 }
