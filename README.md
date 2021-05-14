@@ -45,3 +45,24 @@ The approach we will take, however, is how to search the state space of possible
 
 To test our performance, we will randomly populate sudoku boards with some set number of clues (aka numbers on the boards already). We will vary as well how easy and hard the boards are to solve. Then we will time how long it takes our different implementations to solve all the boards. We will also look at the average time it takes each implementation to solve a single board. We plan to compare the baseline implementation, prolog implementation, and different variants of parallel implementations. 
 The program will also return a table about the relative times of each of the different solving approaches (baseline, parallel in different forms, constraint-method)
+
+- Baseline
+  [X] Tester
+    -[] randomly populate a grid, easy/hard boards, average
+  [X] Solver
+  [X] Prolog Sover
+
+- Parallelization
+  [] Embarrassingly Parallel
+    - Terminate when successful
+  [] Fork/Join Recursive Method
+    - Terminate when we hit a successful result
+  [] Combine both?
+
+- GUI
+  [] Testing Screen
+  [] Select which tests to run
+  [] run on button click
+  [] nice outputs
+  [] An option outside timing Show what each thread is currently looking at (for parralell stuff) run, pause
+
