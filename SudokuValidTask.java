@@ -1,6 +1,6 @@
 public class SudokuValidTask implements Runnable {
 
-    // Instance Methods
+    // Instance Variables
     private int[][] puzzle;
     private int toAdd;
     private int row;
