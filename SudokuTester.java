@@ -17,6 +17,7 @@ public class SudokuTester {
                 {7,0,0,2,0,3,0,9,6}
         };
 
+        // baseline implementation
         int[][] nv = new int[puzzle.length][puzzle[0].length];
         for (int i = 0; i < nv.length; i++) nv[i] = Arrays.copyOf(puzzle[i], puzzle[i].length);
 
@@ -39,6 +40,7 @@ public class SudokuTester {
         System.out.print("Result:");
         System.out.println(Arrays.deepToString(baseline.solveMe.puzzle) + "\n");
 
+        // parallel recrusive version
         int[][] nv2 = new int[puzzle.length][puzzle[0].length];
         for (int i = 0; i < nv2.length; i++) nv2[i] = Arrays.copyOf(puzzle[i], puzzle[i].length);
 
@@ -54,6 +56,23 @@ public class SudokuTester {
         System.out.println("Parallel Task Solver finished in " + (endBase2 - startBase2) + " ms.");
         System.out.print("Result:");
         System.out.println(Arrays.deepToString(parallelSolver.solveMe.puzzle) + "\n");
+
+        //parallel version using a fork join pool
+        int[][] nv3 = new int[puzzle.length][puzzle[0].length];
+        for (int i = 0; i < nv3.length; i++) nv3[i] = Arrays.copyOf(puzzle[i], puzzle[i].length);
+
+        Sudoku solveMe3 = new Sudoku(nv3);
+        ForkJoinSolver forkJoinSolver = new ForkJoinSolver(solveMe3);
+
+        long startBase3 = System.currentTimeMillis();
+
+        forkJoinSolver.solvePuzzle();
+
+        long endBase3 = System.currentTimeMillis();
+
+        System.out.println("Fork Join Solver finished in " + (endBase3 - startBase3) + " ms.");
+        System.out.print("Result:");
+        System.out.println(Arrays.deepToString(forkJoinSolver.board.puzzle) + "\n");
 
 
         if (PROLOG){
