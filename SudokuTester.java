@@ -1,89 +1,126 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.Scanner;
+import java.util.HashMap;
+import java.util.concurrent.ThreadLocalRandom;
+
 
 public class SudokuTester {
-    public static final boolean PROLOG = false;
+
+    public static HashMap<String,Result> test(boolean emb, boolean prolog,boolean par, boolean fjp){
+        
+        int[][] puzzle = genGrid(9);
+
+        HashMap<String,Result> results = new HashMap<String,Result>();
+        results.put("Baseline",testBaseline(copyGrid(puzzle)));
+        
+        if(prolog){
+          results.put("Prolog",testProlog(copyGrid(puzzle)));
+        }
+        if(emb){
+          results.put("emb",testEmb(copyGrid(puzzle)));
+        }
+        if(par){
+          results.put("Recursive",testRecursive(copyGrid(puzzle)));
+        }
+        if(fjp){
+          results.put("fjp",testFJP(copyGrid(puzzle)));
+        }
+        return results;
+    }
 
 
-    public static void main(String[] args) {
-        int[][] puzzle = {
-                {0,7,0,0,0,0,0,0,9},
-                {5,1,0,4,2,0,6,0,0},
-                {0,8,0,3,0,0,7,0,0},
-                {0,0,8,0,0,1,3,7,0},
-                {0,2,3,0,8,0,0,4,0},
-                {4,0,0,9,0,0,1,0,0},
-                {9,6,2,8,0,0,0,3,0},
-                {0,0,0,0,1,0,4,0,0},
-                {7,0,0,2,0,3,0,9,6}
-        };
+    public static int[][] genGrid(int size){
+      int[][] toReturn = new int[size][size];
+      int randomNum =0;
+      int randVal =0;
+      for (int i = 0; i < 7; i++){
+        randomNum = ThreadLocalRandom.current().nextInt(0, size*size);
+        randVal = ThreadLocalRandom.current().nextInt(1, size);
+        
 
-        // baseline implementation
-        int[][] nv = new int[puzzle.length][puzzle[0].length];
-        for (int i = 0; i < nv.length; i++) nv[i] = Arrays.copyOf(puzzle[i], puzzle[i].length);
+        if( new Sudoku(toReturn).isValid(randVal, ((randomNum/9)), randomNum%9)){
+          toReturn[(randomNum/9)][randomNum%9]= randVal;
+        }
+      }
+      return toReturn;
+    }
+    public static int[][] copyGrid(int[][] puzzle){
+      int[][] nv = new int[puzzle.length][puzzle[0].length];
+      for (int i = 0; i < nv.length; i++) nv[i] = Arrays.copyOf(puzzle[i], puzzle[i].length);
+      return nv;
+    }
 
-        Sudoku solveMe = new Sudoku(nv);
+    public static Result testBaseline( int[][] puzzle){
+        Sudoku solveMe = new Sudoku(puzzle);
         SudokuSolverBaseline baseline = new SudokuSolverBaseline(solveMe);
-        System.out.println("Puzzle to solve:");
-        System.out.println(Arrays.deepToString(solveMe.puzzle) + "\n");
-
-        long startBase = System.currentTimeMillis();
-
+        long startBase = System.nanoTime();
         boolean returned = baseline.solvePuzzle();
-
-        long endBase = System.currentTimeMillis();
-
+        long endBase = System.nanoTime();
         if(!returned){
             System.out.println("No Valid Solution Exists");
         }
+        long baselineTime = (endBase - startBase)/1000;
+        int[][] baselineArray = baseline.solveMe.puzzle;
+      return new Result(baselineTime, baselineArray);
+    }
 
-        System.out.println("Baseline Solver finished in " + (endBase - startBase) + " ms.");
-        System.out.print("Result:");
-        System.out.println(Arrays.deepToString(baseline.solveMe.puzzle) + "\n");
-
-        // parallel recrusive version
-        int[][] nv2 = new int[puzzle.length][puzzle[0].length];
-        for (int i = 0; i < nv2.length; i++) nv2[i] = Arrays.copyOf(puzzle[i], puzzle[i].length);
-
-        Sudoku solveMe2 = new Sudoku(nv2);
-        SudokuSolverParallelTasks parallelSolver = new SudokuSolverParallelTasks(solveMe2);
-
-        long startBase2 = System.currentTimeMillis();
-
-        parallelSolver.solvePuzzle();
-
-        long endBase2 = System.currentTimeMillis();
-
-        System.out.println("Parallel Task Solver finished in " + (endBase2 - startBase2) + " ms.");
-        System.out.print("Result:");
-        System.out.println(Arrays.deepToString(parallelSolver.solveMe.puzzle) + "\n");
-
-        //parallel version using a fork join pool
-        int[][] nv3 = new int[puzzle.length][puzzle[0].length];
-        for (int i = 0; i < nv3.length; i++) nv3[i] = Arrays.copyOf(puzzle[i], puzzle[i].length);
-
-        Sudoku solveMe3 = new Sudoku(nv3);
-        ForkJoinSolver forkJoinSolver = new ForkJoinSolver(solveMe3);
-
-        long startBase3 = System.currentTimeMillis();
-
-        forkJoinSolver.solvePuzzle();
-
-        long endBase3 = System.currentTimeMillis();
-
-        System.out.println("Fork Join Solver finished in " + (endBase3 - startBase3) + " ms.");
-        System.out.print("Result:");
-        System.out.println(Arrays.deepToString(forkJoinSolver.board.puzzle) + "\n");
-
-
-        if (PROLOG){
-          try {
-            long ptime = PrologCommand.runProlog(puzzle);
-            System.out.println("Prolog Solver finished in " + ptime + " ms.");
-
+    public static Result testProlog(int[][] puzzle){
+      long ptime = 0;
+        String prologArray = "";
+        int[][] pArray = new int[puzzle.length][puzzle.length];
+        try {
+          ptime= PrologCommand.runProlog(puzzle);
+            try{
+              File f = new File("grid.txt");
+              Scanner scanner = new Scanner(f);
+              prologArray= scanner.next();
+              scanner.close();
+            
+              int elems =0;
+              for (char c :prologArray.toCharArray()){
+                if(c != ']' & c!= '[' & c!= ','){
+                  pArray[elems/9][elems%9]= Character.getNumericValue(c);
+                }
+              } 
+            } catch (FileNotFoundException e) {
+              e.printStackTrace();
+            } 
           } catch (Exception e) {
               System.out.println("ERROR IN PROLOG CODE");
           }
-        }
+      return new Result(ptime,pArray);
+    }
+    public static Result testFJP(int[][] puzzle){
+      Sudoku solveMe3 = new Sudoku(puzzle);
+      ForkJoinSolver forkJoinSolver = new ForkJoinSolver(solveMe3);
+
+      long startBase3 = System.currentTimeMillis();
+      forkJoinSolver.solvePuzzle();
+      long endBase3 = System.currentTimeMillis();
+
+      return new Result(endBase3 - startBase3,forkJoinSolver.board.puzzle);
+    }
+
+    public static Result testRecursive(int[][] puzzle){
+      Sudoku solveMe2 = new Sudoku(puzzle);
+      SudokuSolverParallelTasks parallelSolver = new SudokuSolverParallelTasks(solveMe2);
+      long startBase2 = System.currentTimeMillis();
+      parallelSolver.solvePuzzle();
+      long endBase2 = System.currentTimeMillis();
+      return new Result(endBase2 - startBase2,parallelSolver.solveMe.puzzle);
+    }
+
+    public static Result testEmb(int[][] puzzle){
+      Sudoku solveMe2 = new Sudoku(puzzle);
+      SudokuSolverEmb embSolver = new SudokuSolverEmb(solveMe2);
+      long startBase2 = System.currentTimeMillis();
+      embSolver.solvePuzzle();
+      long endBase2 = System.currentTimeMillis();
+      return new Result(endBase2 - startBase2,embSolver.solveMe.puzzle);
 
     }
+
 }
+
