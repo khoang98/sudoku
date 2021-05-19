@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.HashMap;
 
-class MyFrame extends JFrame {
+public class MyFrame extends JFrame {
 
   public HashMap<String,Boolean> toRun = new HashMap<String,Boolean>(4);
 
