@@ -29,12 +29,9 @@ public class PrologCommand {
           System.out.println(line);
         }
         p.waitFor();
-        System.out.println("Prolog file done.");
-
-        System.out.println("The resultant solved suduku:");
         Scanner input = new Scanner(new File("grid.txt"));
         while (input.hasNextLine()){
-            System.out.println(input.nextLine());
+           input.nextLine();
         }
         Scanner timescanner = new Scanner(new File("time.txt"));
 
