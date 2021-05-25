@@ -1,6 +1,8 @@
 import java.util.concurrent.ForkJoinPool;
 import java.util.Arrays;
-
+/*
+    Class to solve a sudoku board using fork join pools to parallelize the search
+*/
 public class ForkJoinSolver{
 
     Sudoku board;
@@ -10,6 +12,8 @@ public class ForkJoinSolver{
         this.board = p;
     }
 
+    //method to solve the given sudoku board
+    //returns true if solved, false if not
     public boolean solvePuzzle(){
         ForkJoinPool pool = new ForkJoinPool(POOL_SIZE);
         int puzzleSize = this.board.puzzle.length;
