@@ -1,3 +1,6 @@
+/**
+  * Description: a class which solves sudoku using the same backtracking method as the baseline, but uses a parralell version of isValid. solvePuzzle returns a false if no valid puzzle exists
+  */
 public class SudokuSolverEmb {
     
     public Sudoku solveMe;
