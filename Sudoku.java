@@ -2,6 +2,11 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+
+/**
+  * Description: An instance of a sudoku puzzle, with methods to check if a given puzzle is valid given an added value.
+  */
+
 public class Sudoku{
 
     int[][] puzzle;

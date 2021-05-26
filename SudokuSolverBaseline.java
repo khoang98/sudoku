@@ -1,3 +1,7 @@
+/**
+  * Description: a class which uses backtracking and recursion to solve a sudoku puzzle without parralellization.
+  */
+
 public class SudokuSolverBaseline {
 
     public Sudoku solveMe;
@@ -5,7 +9,7 @@ public class SudokuSolverBaseline {
     public SudokuSolverBaseline(Sudoku s){
         this.solveMe = s;
     }
-
+    // Solves the puzzle the class is instaitated with -- return false if no solution extists.
     public boolean solvePuzzle(){
 
         int puzzleSize = this.solveMe.puzzle.length;
