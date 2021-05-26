@@ -1,17 +1,31 @@
 # sudoku
 COSC 273: Parallel and Distributed Computing Final Project
 
-Connor Haugh, Kaitlin Hoang, Kyler Kopacz, Sam Rydzewski.
+Connor Haugh, Kaitlin Hoang, Kyler Kopacz, Samantha Rydzewski.
 
-## **Functionality:**
-Presently, the implementation contians the two solvers against which the parralel versions will test against. The first is a simple baseline implementation in java, the second is an implementation in prolog, which uses a logic programming approach to solve the same problem.
+## **OVERVIEW:**
+Our project aims to build a parallel sudoku solver. Sudoku is a logic based, combinatorial number-placement puzzle.
+A traditional sudoku board consists of a 9x9 grid with some numbers prefilled and the goal is to fill in numbers 1-9 such that each row, column, and 3x3 square contains each number. 
+Our baseline, sequential solver solves the puzzle as follows:
+  Select an empty place on the board, p 
+  Select a value 1-9, x
+  Determine if x at p violates any of the 1-9 exclusiveness for any row, column, or subgrid
+    if no, add x to the grid at p and recur
+    if yes, return to step 2 and select another value. If no values are valid, backtrack and remove the last value added.
+  When the grid is full, return
+
+We also built a baseline solution in Prolog.
+Our program compares this two baseline performances to that of 3 parallel implementations we refer to as the Embarrassingly Parallel solution, Fork-Join solution, and Recursive solution.
+We discuss the specifics of these solutions in the Functionality section.
 
 
 ### **HOW TO COMPLIE + RUN:**
+Simply compile with javac*.java and then run "java RunSudoku". 
 
-#### **Without Prolog:** 
-Simply compile with javac*.java and then run "java SudokuTester.java" 
-By default, not downloading prolog is an option as well, it just won't show up in the results. 
+A GUI will appear where you can select which implementations you'd like to compare.
+After clicking on them, click the run button and the results will appear in the white box in the GUI.
+If you do not have Prolog installed, do not select that option.
+We give instructions on how to install Prolog below.
 
 #### **With Prolog: ADD SWI PROLOG TO YOUR MACHINE** 
 #### **Mac:**
@@ -36,33 +50,34 @@ sudo apt install swi-prolog-nox
 ```
 
 
-**TO UTILIZE PROLOG, set PROLOG = true in tester, regardless of OS!**
+## **FUNCTIONALITY**
+To parallelize the sudoku solver, we saw two oppurtunities to parallelize.
+  1) We can parallelize the board validation.
+  2) Explore possible solutions in parallel tasks.
 
-## Future Functionality:
+We refer to 1) as our Embarrassingly Parallel solution. For this implementation, we preform the same process as our sequential baseline solver but when doing the validation we do it in parallel. We create 3 tasks that we run in parallel-  (1) check row is valid, (2) check column is valid, (3) check that the sub 3x3 square is valid every time we check if a board is valid.
 
-There are several scales at which we could parallelize the process. To check if a grid is “consistent” (contains 1-9 and nothing else) given its row, column, or boxes is an embarrassingly parallel task. 
-The approach we will take, however, is how to search the state space of possible next “placements” of a number in an iterative fashion. Think about solving a 3x3 sudoku. From a partially filled grid, we can evaluate all the possible “next” grids from that grid. We can give each of these next grids to a particular thread to evaluate, and even iterate further down the “tree” in a breadth-first search approach. 
+For 2), we took two different approaches with the implementation. 
+The general algorithm for each works by creating a new task for each blank square in the board. This task then places valid values 1-9 in that place and spawns new tasks for the next blank square.Tasks with invalid solutions are terminated, while tasks with valid solutions can create new tasks.
+We implemented this algorithm using a thread pool and a fork-join pool. The fork-join pool forks on each possible value on a square and whichever task produces a valid board passes the board back up in the recursion on join().
+We refer to these solutions as the Recursive implementation and the Fork-Join solver implementation, respectively.
 
-To test our performance, we will randomly populate sudoku boards with some set number of clues (aka numbers on the boards already). We will vary as well how easy and hard the boards are to solve. Then we will time how long it takes our different implementations to solve all the boards. We will also look at the average time it takes each implementation to solve a single board. We plan to compare the baseline implementation, prolog implementation, and different variants of parallel implementations. 
-The program will also return a table about the relative times of each of the different solving approaches (baseline, parallel in different forms, constraint-method)
 
-- Baseline
-  [X] Tester
-    -[] randomly populate a grid, easy/hard boards, average
-  [X] Solver
-  [X] Prolog Sover
+## **TESTING**
+To test our performance, we randomly populate sudoku board with some set number of clues and time how long it takes for each implementation to solve them.
 
-- Parallelization
-  [] Embarrassingly Parallel
-    - Terminate when successful
-  [] Fork/Join Recursive Method
-    - Terminate when we hit a successful result
-  [] Combine both?
+Testing on a random 9x9 board with 7 prefilled values:
+  Performance with 4 threads on local computer:
+    The baseline Solver: 1274ms 
+    The Prolog Solver: 154ms 
+    The Embarrasingly Paralell Solver: 466ms 
+    The Fork-Join Pool Solver: 27 ms 
+    The Recurisve Solver: N/A ran out of memory
 
-- GUI
-  [] Testing Screen
-  [] Select which tests to run
-  [] run on button click
-  [] nice outputs
-  [] An option outside timing Show what each thread is currently looking at (for parralell stuff) run, pause
+  Performance on Remus with 32 threads:
+    The baseline Solver: 1063ms 
+    The Embarrasingly parralell Solver: 348ms 
+    The Fork-Join Pool Solver: 40 ms
 
+We can see that that the Fork-Join Pool Solver outperforms both the baseline and Prolog solution. Note the Embarrasingly Paralell Solver also outperforms the baseline but not the Prolog Solver. This shows us that parallelizing did help our performance in solving sudoku. 
+The Recursive Solver, on the other hand, did not improve the performance. We believe the reason for this is that the overhead of the ThreadPool is too much for how easily solved the program is sequentially. 
