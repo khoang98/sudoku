@@ -2,6 +2,11 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.Scanner;
 
+/**
+  * Description: A class which handles input and output of puzzles into a prolog solver, obtaining back both the solved puzzle and the time it took to solve.
+  */
+
+
 public class PrologCommand {
 
     public static long runProlog(int[][] puzzle) throws java.io.IOException, InterruptedException{
