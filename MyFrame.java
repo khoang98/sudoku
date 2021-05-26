@@ -3,6 +3,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.HashMap;
 
+/**
+  * Description: A class which creates a frame for the user to interact with to run tests of the various sovlers and view results.
+  */
+
 public class MyFrame extends JFrame {
 
   public HashMap<String,Boolean> toRun = new HashMap<String,Boolean>(4);
