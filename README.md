@@ -19,11 +19,12 @@ Our program compares this two baseline performances to that of 3 parallel implem
 We discuss the specifics of these solutions in the Functionality section.
 
 
-### **HOW TO COMPLIE + RUN:**
+## **HOW TO COMPLIE + RUN:**
 Simply compile with javac*.java and then run "java RunSudoku". 
 
 A GUI will appear where you can select which implementations you'd like to compare.
-After clicking on them, click the run button and the results will appear in the white box in the GUI.
+On the left hand side, input into the small white box how many boards to average over and choose a difficulty level from the drop down.
+Then, click the run button and the results will appear in the large white box in the GUI.
 If you do not have Prolog installed, do not select that option.
 We give instructions on how to install Prolog below.
 
@@ -65,8 +66,17 @@ We refer to these solutions as the Recursive implementation and the Fork-Join so
 
 ## **TESTING**
 To test our performance, we randomly populate sudoku board with some set number of clues and time how long it takes for each implementation to solve them.
+We also average over multiple boards to look at the average time it takes each solver to solve sudoku.
+We also test our solvers on easy, medium, and hard boards. We rate the difficulty of the board based on how many clues it has.
 
-Testing on a random 9x9 board with 7 prefilled values:
+Below is some of the results we got while testing.
+Testing on a random 9x9 easy board with 9 prefilled values:
+  The baseline Solver: 621ms 
+  The Prolog Solver: 83ms 
+  The Embarrasingly parralell Solver: 196ms 
+  The Fork-Join Pool Solver: 13 ms 
+
+Testing on a random 9x9 medium board with 7 prefilled values:
   Performance with 4 threads on local computer:
     The baseline Solver: 1274ms 
     The Prolog Solver: 154ms 
@@ -78,6 +88,12 @@ Testing on a random 9x9 board with 7 prefilled values:
     The baseline Solver: 1063ms 
     The Embarrasingly parralell Solver: 348ms 
     The Fork-Join Pool Solver: 40 ms
+
+Testing on a random 9x9 hard board with 5 prefilled values:
+  The baseline Solver: 385ms 
+  The Embarrasingly parralell Solver: 354ms 
+  The Fork-Join Pool Solver: 5 ms 
+
 
 We can see that that the Fork-Join Pool Solver outperforms both the baseline and Prolog solution. Note the Embarrasingly Paralell Solver also outperforms the baseline but not the Prolog Solver. This shows us that parallelizing did help our performance in solving sudoku. 
 The Recursive Solver, on the other hand, did not improve the performance. We believe the reason for this is that the overhead of the ThreadPool is too much for how easily solved the program is sequentially. 
