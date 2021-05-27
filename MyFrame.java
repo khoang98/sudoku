@@ -4,6 +4,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import javax.swing.JComboBox;
 
 /**
   * Description: A class which creates a frame for the user to interact with to run tests of the various sovlers and view results.
@@ -18,18 +19,19 @@ public class MyFrame extends JFrame {
   private JToggleButton btnParallel = new JToggleButton("Recursive Parralel");
   private JToggleButton btnfjp = new JToggleButton("Fork-Join");
 
-  private JLabel lblTestsToPerform= new JLabel("Select Which Tests to Perform");
+  private JLabel lblTestsToPerform= new JLabel("Select Which Tests to Perform, how many iterations of tests and difficulty");
 
-  private JLabel lblRunTests= new JLabel("Run Tests:");
+  private JLabel lblRunTests= new JLabel("Run Tests at selected difficulty :");
   private JButton btnRunTests = new JButton("Run");
 
   private JTextArea testResults = new JTextArea();
 
 
   private int x=10;
-
   private JTextField jTextField1 = new JTextField();
 
+  String[] choices = { "EASY","MEDIUM", "HARD"};
+  private JComboBox<String> dropdown = new JComboBox(choices);
 
   public MyFrame(){
     setTitle("Sudoku");
@@ -46,6 +48,9 @@ public class MyFrame extends JFrame {
   private void initComponent(){
 
     jTextField1.setBounds(0, 100, 50, 50);
+
+    dropdown.setVisible(true);
+    dropdown.setBounds(0, 140,50,50);
 
     btnEmb.setBounds(20,30, 80,25);
     btnProlog.setBounds(150,30, 80,25);
@@ -79,6 +84,7 @@ public class MyFrame extends JFrame {
     };
 
     add(testResults);
+    add(dropdown);
     add(lblTestsToPerform);
     add(btnEmb);
     add(btnfjp);
@@ -121,7 +127,7 @@ public class MyFrame extends JFrame {
 
     List<HashMap<String,Result>> listOfMaps = new ArrayList<HashMap<String,Result>>();
       for(int i =0; i< x; i++){
-        HashMap<String,Result> result = SudokuTester.test(toRun.get(btnEmb.getText()), toRun.get(btnProlog.getText()),toRun.get(btnParallel.getText()),toRun.get(btnfjp.getText()));
+        HashMap<String,Result> result = SudokuTester.test(toRun.get(btnEmb.getText()), toRun.get(btnProlog.getText()),toRun.get(btnParallel.getText()),toRun.get(btnfjp.getText()), String.valueOf(dropdown.getSelectedItem()));
         listOfMaps.add(result);
       }
 
