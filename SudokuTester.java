@@ -15,9 +15,20 @@ import java.util.concurrent.ThreadLocalRandom;
   */
 public class SudokuTester {
 
-    public static HashMap<String,Result> test(boolean emb, boolean prolog,boolean par, boolean fjp){
+    public static HashMap<String,Result> test(boolean emb, boolean prolog,boolean par, boolean fjp, String difficulty){
 
-        int[][] puzzle = genGrid(9);
+
+        int dif = 0;
+
+        switch (difficulty){
+          case "EASY": dif=9;
+          break;
+          case "MEDIUM": dif=7;
+          break;
+          case "HARD": dif =5;
+        }
+        
+        int[][] puzzle = genGrid(9, dif);
 
         HashMap<String,Result> results = new HashMap<String,Result>();
         results.put("Baseline",testBaseline(copyGrid(puzzle)));
@@ -38,11 +49,11 @@ public class SudokuTester {
     }
 
 
-    public static int[][] genGrid(int size){
+    public static int[][] genGrid(int size, int dif){
       int[][] toReturn = new int[size][size];
       int randomNum =0;
       int randVal =0;
-      for (int i = 0; i < 7; i++){
+      for (int i = 0; i < dif; i++){
         randomNum = ThreadLocalRandom.current().nextInt(0, size*size);
         randVal = ThreadLocalRandom.current().nextInt(1, size);
 
