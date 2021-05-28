@@ -19,8 +19,15 @@ Our program compares this two baseline performances to that of 3 parallel implem
 We discuss the specifics of these solutions in the Functionality section.
 
 
-## **HOW TO COMPLIE + RUN:**
-Simply compile with javac*.java and then run "java RunSudoku". 
+## **HOW TO COMPILE + RUN:**
+First, navigate to the 'src' folder, and compile with
+```
+javac *.java
+```
+After everything compiles, run the program with
+```
+java RunSudoku
+``` 
 
 A GUI will appear where you can select which implementations you'd like to compare.
 On the left hand side, input into the small white box how many boards to average over and choose a difficulty level from the drop down.
